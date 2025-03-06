@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="es" class="light-theme">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+  <!--plugins-->
+  <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+  <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+  <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap.css" rel="stylesheet" />
+  <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
+  <link href="assets/css/style.css" rel="stylesheet" />
+  <link href="assets/css/icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+
+  <!-- loader-->
+	<link href="assets/css/pace.min.css" rel="stylesheet" />
+
+  <!--Theme Styles-->
+  <link href="assets/css/light-theme.css" rel="stylesheet" />
+  <link href="assets/css/header-colors.css" rel="stylesheet" />
+
+  <script src="./assets/js/jquery-3.6.0.js" ></script>
+
+
+  <title>Panel - BSG Medical</title>
+  <script>
+    $.post("./api/ObtenerSesion")
+    .then((res)=>{
+      if(res=="NO"){
+        window.location.href = "//intranet.bsglaboratorios.com.ar";
+      }
+    })
+  </script>
+</head>
+
+<body>
+
+
+  <!--Inicio del Contenedor-->
+  <div class="wrapper">
+    <div id="menu"></div>
+      <script>
+          $.get("menu.html", function(data){
+              $("#menu").html(data);
+          });
+
+          $.post("./api/ObtenerRol")
+            .then((role)=>{
+                if(role=="Administrador"){
+                $("#dashboard_admin").prop('hidden',false);
+                }else{
+                $("#dashboard_user").prop('hidden',false);
+                }
+                rol=role;
+            })
+      </script>
+
+       <!--Inicio de Pagina para Admins con Graficos-->
+          <main hidden class="page-content" id="dashboard_admin">
+            <div class="row m-3 text-center">
+                <h4 class="m-3">SELECCIONE LAS FECHA DE INCIO Y FINAL PARA OBTENER LOS DATOS</h4>
+                <p>Los datos de meses anteriores son comparados con el mismo período, por ejemplo, si se buscan datos del 1 al 3 de Noviembre, 
+                    compará con el 1 al 3 de los dos meses inmediatos anteriores.
+                </p>
+                <div class="col-12 col-xs-12 col-md-12 col-lg-6 col-xl-6">
+                    <label for="desde">Fecha Desde</label>
+                    <input type="date" id="desde" class="form-control" onchange="Inicializador();">
+                </div>
+                <div class="col-12 col-xs-12 col-md-12 col-lg-6 col-xl-6">
+                    <label for="hasta">Fecha Hasta</label>
+                    <input type="date" id="hasta" class="form-control" onchange="Inicializador();">
+                </div>
+            </div>
+
+            <div class="row row-cols-12 row-cols-lg-12 row-cols-xl-12 row-cols-xxl-12 m-3">
+              <div class="col">
+                <div class="card overflow-hidden radius-10">
+                    <div class="card-body p-2">
+                     <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                      <div class="w-50 p-3 bg-light-pink">
+                        <p>Venta Promedio</p>
+                        <h4 class="text-pink" id="venta_promedio"> $ 1900.50</h4>
+                      </div>
+                      <div class="w-50 bg-pink p-3">
+                         <p class="mb-3 text-white" id="crecimiento_mes_anterior">+ 16% </p>
+                         <div id="chart1"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+               <div class="col">
+                <div class="card overflow-hidden radius-10">
+                    <div class="card-body p-2">
+                     <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                      <div class="w-50 p-3 bg-light-success">
+                        <p>Facturado</p>
+                        <h6 class="text-success" id="monto_blanco">$64.5K</h6>
+                      </div>
+                      <div class="w-50 bg-success p-3">
+                         <p class="mb-3 text-white" id="crecimiento_mes_anterior_blanco">+ 24% <i class="bi bi-arrow-up"></i></p>
+                         <div id="chart2"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+               <div class="col">
+                <div class="card overflow-hidden radius-10">
+                    <div class="card-body p-2">
+                     <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                      <div class="w-50 p-3 bg-light-purple ">
+                        <p>Sin Facturar</p>
+                        <h6 class="text-purple" id="monto_negro">$64.5K</h6>
+                      </div>
+                      <div class="w-50 bg-purple p-3">
+                         <p class="mb-3 text-white" id="crecimiento_mes_anterior_negro">+ 24% <i class="bi bi-arrow-up"></i></p>
+                         <div id="chart3"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+            </div><!--end row-->
+
+
+            <div class="row m-3">
+              <div class="col-12 col-lg-12 col-xl-12 col-xxl-12 d-flex">
+                <div class="card radius-10 bg-transparent shadow-none w-100">
+                  <div class="card-body p-0">
+                    <div class="card radius-10">
+                      <div class="card-body">
+                        <div class="d-flex align-items-center">
+                           <h6 class="mb-0">Por Medio de Pago</h6>
+                        </div>
+                        <div class="row row-cols-1 row-cols-md-2 mt-3 g-3">
+                          <div class="col">
+                            <div class="by-device-container">
+                              <canvas id="chart4"></canvas>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="">
+                              <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex align-items-center justify-content-between border-0">
+                                  <i class="bi bi-cash me-2 text-success"></i> <span>Efectivo</span> <span id="efectivo"></span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center justify-content-between border-0">
+                                  <i class="bi bi-bank me-2 text-primary"></i> <span>Transferencia</span> <span id="transferencia"></span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center justify-content-between border-0">
+                                  <i class="bi bi-credit-card me-2 text-orange"></i> <span>Posnet</span> <span id="posnet"></span>
+                                </li>
+                              </ul>
+                             </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!--end row-->
+
+            <div class="row row-cols-12 row-cols-lg-12 row-cols-xl-12 row-cols-xxl-12 m-3">
+                <div class="col">
+                  <div class="card overflow-hidden radius-10">
+                      <div class="card-body p-2">
+                       <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                        <div class="w-50 p-3 bg-light-pink">
+                          <p>Total Compras</p>
+                          <h5 class="text-pink" id="total_compras"> $ 1900.50</h5>
+                        </div>
+                        <div class="w-50 bg-pink p-3">
+                           <p class="mb-3 text-white" id="crecimiento_mes_anterior_compras">+ 16% </p>
+                           <div id="chart5"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 </div>
+                 <div class="col">
+                  <div class="card overflow-hidden radius-10">
+                      <div class="card-body p-2">
+                       <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                        <div class="w-50 p-3 bg-light-success">
+                          <p>Total Ventas</p>
+                          <h5 class="text-success" id="total_ventas">$64.5K</h5>
+                        </div>
+                        <div class="w-50 bg-success p-3">
+                           <p class="mb-3 text-white" id="crecimiento_mes_anterior_blanco_ventas">+ 24% <i class="bi bi-arrow-up"></i></p>
+                           <div id="chart6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 </div>
+            </div><!--end row-->
+
+            <div class="row row-cols-12 row-cols-lg-12 row-cols-xl-12 row-cols-xxl-12 m-3">
+                <div class="col"> <!--Compras-->
+                    <div class="card overflow-hidden radius-10">
+                        <div class="card-body p-2">
+                         <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                          <div class="w-100 p-3 bg-light-pink">
+                            <p>Facturado</p>
+                            <h6 class="text-pink" id="monto_compras_blanco">$64.5K</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                   </div>
+                   <div class="col">
+                    <div class="card overflow-hidden radius-10">
+                        <div class="card-body p-2">
+                         <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                          <div class="w-100 p-3 bg-light-pink ">
+                            <p>Sin Facturar</p>
+                            <h6 class="text-pink" id="monto_compras_negro">$64.5K</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                   </div>
+
+                   <div class="col"> <!--Ventas-->
+                    <div class="card overflow-hidden radius-10">
+                        <div class="card-body p-2">
+                         <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                          <div class="w-100 p-3 bg-light-success">
+                            <p>Facturado</p>
+                            <h6 class="text-success" id="monto_blanco_2">$64.5K</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                   </div>
+                   <div class="col">
+                    <div class="card overflow-hidden radius-10">
+                        <div class="card-body p-2">
+                         <div class="d-flex align-items-stretch justify-content-between radius-10 overflow-hidden">
+                          <div class="w-100 p-3 bg-light-success ">
+                            <p>Sin Facturar</p>
+                            <h6 class="text-success" id="monto_negro_2">$64.5K</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                   </div>
+              </div><!--end row-->
+
+
+          </main>
+       <!--end page main-->
+
+        <!--Inicio de Pagina para No Admins con Graficos-->
+            <main hidden class="page-content text-center" id="dashboard_user">
+                <img style="width:40%" src="./assets/images/logo.png">
+            </main>
+       <!--end page main-->
+
+
+
+  </div>
+  <!--end wrapper-->
+
+
+  <!-- Bootstrap bundle JS -->
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <!--plugins-->
+  <script src="assets/js/pace.min.js"></script>
+  <script src="assets/plugins/chartjs/js/Chart.min.js"></script>
+  <script src="assets/plugins/chartjs/js/Chart.extension.js"></script>
+  <script src="assets/plugins/apexcharts-bundle/js/apexcharts.min.js"></script>
+  <script src="//momentjs.com/downloads/moment.min.js"></script> <!--Moments Library-->
+
+  <!--app-->
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/index2.js"></script>
+  <script>
+    new PerfectScrollbar(".best-product")
+ </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es" class="light-theme">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+  <!--plugins-->
+  <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+  <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+  <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+  <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" />
+  <link href="assets/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
+  <link href="assets/plugins/input-tags/css/tagsinput.css" rel="stylesheet" />
+  <link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
+  <link href="assets/css/style.css" rel="stylesheet" />
+  <link href="assets/css/icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="./assets/plugins/notifications/css/lobibox.min.css" />
+
+
+  <!-- loader-->
+	<link href="assets/css/pace.min.css" rel="stylesheet" />
+
+
+  <!--Theme Styles-->
+  <link href="assets/css/light-theme.css" rel="stylesheet" />
+  <link href="assets/css/header-colors.css" rel="stylesheet" />
+
+  <script src="./assets/js/jquery-3.6.0.js" ></script>
+
+  <title>Ingreso de Mercaderia - BSG Medical</title>
+  <script>
+    $.post("./api/ObtenerSesion")
+    .then((res)=>{
+      if(res=="NO"){
+        window.location.href = "//intranet.bsglaboratorios.com.ar/index.html";
+      }
+    })
+  </script>
+  <style>
+    .mostrarColumna{
+      width:100% !important;
+    }
+    tr{
+      text-align: center;
+    }
+    #modalNuevoIngreso .modal-dialog {
+        width: 100% !important;
+        margin:auto !important
+    }
+  </style>
+</head>
+
+<body onload="CargarComprobantes();">
+
+
+  <!--start wrapper-->
+  <div class="wrapper">
+    <div id="menu"></div>
+      <script>
+          $.get("menu.html", function(data){
+              $("#menu").html(data);
+          });
+      </script>
+
+       <!--start content-->
+       <main class="page-content">
+				<!--breadcrumb-->
+				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Productos</div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item active" aria-current="page">Ingresos de Mercaderia</li>
+							</ol>
+						</nav>
+					</div>
+				</div>
+				<!--end breadcrumb-->
+
+                <div class="row">
+					<div class="col-xl-12 col-xs-12 mx-auto">
+						<div class="card mt-1">
+							<div class="card-body" style="margin-left:30px !important">
+                                <div class="row mb-4">
+                                    <div class="input-group p-2">
+                                      <span class="input-group-text">Fecha</span>
+                                      <input type="date" onchange="CargarComprobantes();" id="fechaComprobantes" class="form-control">
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <span class="input-group-text">Hasta</span>
+                                      <input type="date" onchange="CargarComprobantes();" id="fechaHastaComprobantes" class="form-control">
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      <span style="float:right !important;" class="btn btn-dark " onclick="NuevoIngreso();"><i class="fas fa-edit"></i> Nuevo Comprobante</span>
+
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="comprobantes" class="table table-striped table-bordered ">
+                                        <thead>
+                                        <tr>
+                                            <th>TIPO</th>
+                                            <th>Nº</th>
+                                            <th>PROVEEDOR</th>
+                                            <th>FECHA</th>
+                                            <th>TOTAL</th>
+                                            <th>USUARIO</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row" style="margin-top:60px !important">
+                                    <h6>SUBTOTALES POR PERÍODO</h6>
+                                    <div class="input-group p-2">
+                                      <span class="input-group-text">Facturado</span><input readonly type="text" id="blanco" class="form-control disabledField">
+                                      <span class="input-group-text">Remitos</span><input readonly type="text" id="negro" class="form-control disabledField">
+                                    </div>
+                                </div>
+
+                            </div>
+  					    </div>
+  				    </div>
+            </div>
+        </main>
+       <!--end page main-->
+    </div>
+  <!--end wrapper-->
+
+  <div class="modal fade" id="modalNuevoIngreso" tabindex="-1" aria-hidden="true" >
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo Ingreso de Mercadería.</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="CerrarNuevoProducto();"></button>
+        </div>
+          <div class="modal-body" >
+            <div class="row">
+                <div class="input-group p-2">
+                    <span class="input-group-text">Fecha</span><input type="date" id="fecha" class="form-control">
+                    <span class="input-group-text">Nro. Comprobante</span><input type="text" id="nroComprobante" class="form-control" placeholder="00002-51515">
+                    <span class="input-group-text">Tipo Comprobante</span>
+                    <select id="tCompro" class="form-control">
+                        <option selected disabled value="0">Seleccione uno</option>
+                        <option value="FACTURA">FACTURA</option>
+                        <option value="REMITO">REMITO</option>
+                    </select>
+                </div>
+                <div class="input-group p-2">
+                    <span class="input-group-text">Proveedor</span>
+                    <select id="proveedor" class="form-control">
+                    </select>
+                </div>
+                <hr style="margin-top: 10px;">
+                <div class="input-group p-2">
+                    <span class="input-group-text">Buscar Producto : </span><input type="text" autocomplete="off" autofocus class="form-control"  id="buscadorProducto" aria-describedby="emailHelp" placeholder="Puede buscar un producto por nombre, codigo o SKU.">
+                </div>
+                <div class="input-group p-2 ">
+                    <table class="table centered" id="tabla-nuevo-pedido" >
+                          <thead>
+                            <tr>
+                                <th class="text-center">CODIGO</th>
+                                <th class="text-center">NOMBRE</th>
+                                <th class="text-center">LOTE</th>
+                                <th class="text-center">DETALLE</th>
+                                <th class="text-center">VENCIMIENTO</th>
+                                <th class="text-center">UNIDADES</th>
+                                <th class="text-center">ELIMINAR</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                    </table>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark acciones-modal"  onclick="GuardarComprobante();">Cargar Comprobante</button>
+          </div>
+      </div>
+    </div>
+  </div> <!--Cierre modal NuevoComprobante-->
+  
+  <div class="modal fade" id="modalElegirproducto" tabindex="-1" role="dialog" aria-labelledby="modalElegirproducto" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Elegir Producto</h5>
+          <button type="button" class="close" onclick="CerrarElegirProducto();" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="elegirproducto">
+            <div class="row text-center">
+              <table class="table centered tabla-clientes p-3" id="tabla-elegirproducto" style="width: 100%;">
+                <thead>
+                  <tr>
+                      <th>Codigo</th>
+                      <th>Nombre</th>
+                      <th>Precio Compra</th>
+                      <th>Precio Venta</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+              </table>
+            </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div> <!--Cierre Modal Elegir Producto-->
+
+  <div class="modal fade" id="modalVerComprobante" tabindex="-1" role="dialog" aria-labelledby="modalVerComprobante" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalle del Ingreso</h5>
+          <button type="button" class="close" onclick="CerrarVerComprobante();" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <table class="table centered" id="tabla-items" >
+              <thead>
+                <tr>
+                    <th class="text-center">Codigo</th>
+                    <th class="text-center">Nombre</th>
+                    <th class="text-center">Lote</th>
+                    <th class="text-center">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+ </div> <!--Cierre Modal Ver Comprobante-->
+
+ <div class="modal fade" id="modalMetodo" tabindex="-1" role="dialog" aria-labelledby="modalMetodo" aria-hidden="true"><!-- Metodos de Pago -->
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Metodos de Pago</h5>
+        <button type="button" class="close" onclick="CerrarElegirMetodo();" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="metodo" class="col-12">
+          <div class="row p-2">
+            <div class="input-group p-2 ">
+              <span class="input-group-text cc">CUENTA CORRIENTE</span><input type="number" value="0.00" id="cc" step="0.01" class="form-control cc">
+              <span class="input-group-text">EFECTIVO</span><input type="number" value="0.00" id="efectivo" step="0.01" class="form-control">
+            </div>
+
+            <div class="input-group p-2">
+              <span class="input-group-text">TRANSFERENCIA</span><input type="number" value="0.00" id="transferencia" step="0.01" class="form-control">
+              <span class="input-group-text">CHEQUE</span><input type="number" value="0.00" id="cheque" step="0.01" class="form-control">
+              <button onclick="InsertarComprobante();" type="button" class="btn btn-dark radius-15"><i class="bi bi-plus"></i>Guardar</button>
+            </div>
+          </div>
+        </form>
+    </div>
+</div>
+
+
+  <!-- Bootstrap bundle JS -->
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <!--plugins-->
+  <script src="./assets/js/pace.min.js"></script>
+  <script src="./assets/plugins/select2/js/select2.min.js"></script>
+  <script src="./assets/plugins/input-tags/js/tagsinput.js"></script>
+  <script src="./assets/js/form-select2.js"></script>
+  <script src="./assets/plugins/notifications/js/notifications.js"></script>
+  <script src="./assets/plugins/notifications/js/lobibox.js"></script>
+  <script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+  <script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+  <script src="//momentjs.com/downloads/moment.min.js"></script> <!--Moments Library-->
+  <!--app-->
+  <script src="./js/ingresoMercaderia.js?v=0.02"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+
+</html>

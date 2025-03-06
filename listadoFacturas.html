@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es" class="light-theme">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+  <!--plugins-->
+  <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+  <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+  <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+  <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" />
+  <link href="assets/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
+  <link href="assets/plugins/input-tags/css/tagsinput.css" rel="stylesheet" />
+  <link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
+  <link href="assets/css/style.css" rel="stylesheet" />
+  <link href="assets/css/icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="./assets/plugins/notifications/css/lobibox.min.css" />
+
+
+  <!-- loader-->
+	<link href="assets/css/pace.min.css" rel="stylesheet" />
+
+
+  <!--Theme Styles-->
+  <link href="assets/css/light-theme.css" rel="stylesheet" />
+  <link href="assets/css/header-colors.css" rel="stylesheet" />
+
+  <script src="./assets/js/jquery-3.6.0.js" ></script>
+
+  <style>
+    .input-group{
+      margin-top:20px !important
+    }
+    tr{
+      text-align: center;
+    }
+    .mostrarColumna{
+      width: 50% !important;
+      margin:0px !important;
+    }
+  </style>
+  
+  <title>Listado de Facturas - BSG Medical</title>
+
+  <script>
+    $.post("./api/ObtenerSesion")
+    .then((res)=>{
+      if(res=="NO"){
+        window.location.href = "//intranet.bsglaboratorios.com.ar/index.html";
+      }
+    })
+  </script>
+
+</head>
+
+<body onload="CargarFacturas();">
+
+
+  <!--start wrapper-->
+  <div class="wrapper">
+    <div id="menu"></div>
+      <script>
+          $.get("menu.html", function(data){
+              $("#menu").html(data);
+          });
+      </script>
+
+       <!--start content-->
+       <main class="page-content">
+				<!--breadcrumb-->
+				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Contable</div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item active" aria-current="page">Listado de Factura</li>
+							</ol>
+						</nav>
+					</div>
+				</div>
+				<!--end breadcrumb-->
+				<div class="row">
+					<div class="col-xl-12 col-xs-12 mx-auto">
+						<div class="card mt-1">
+							<div class="card-body" style="margin-left:30px !important">
+                                <div class="row mb-4">
+                                    <div class="input-group p-2">
+                                      <span class="input-group-text">Desde</span><input type="date" onchange="CargarFacturas();" id="desde" class="form-control">
+                                      <span class="input-group-text">Hasta</span><input type="date" onchange="CargarFacturas();" id="hasta" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                <table id="facturas" class="table table-striped table-bordered ">
+                                    <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Vendedor</th>
+                                        <th>Tipo</th>
+                                        <th>N°</th>
+                                        <th>CAE</th>
+                                        <th>Vto.</th>
+                                        <th>Monto</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                    </div>
+                </div>
+  					</div>
+  				</div>
+        </div>
+				<!--end row-->
+			</main>
+       <!--end page main-->
+
+  <!--end wrapper-->
+
+
+  <!-- Bootstrap bundle JS -->
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <!--plugins-->
+  <script src="./assets/js/pace.min.js"></script>
+  <script src="./assets/plugins/select2/js/select2.min.js"></script>
+  <script src="./assets/plugins/input-tags/js/tagsinput.js"></script>
+  <script src="./assets/js/form-select2.js"></script>
+  <script src="./assets/plugins/notifications/js/notifications.js"></script>
+  <script src="./assets/plugins/notifications/js/lobibox.js"></script>
+  <script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+  <script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+  <script src="//momentjs.com/downloads/moment.min.js"></script> <!--Moments Library-->
+
+  <!--app-->
+  <script src="./js/facturas.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+
+</html>

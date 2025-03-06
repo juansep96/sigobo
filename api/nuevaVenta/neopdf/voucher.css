@@ -1,0 +1,100 @@
+.center-text {
+    text-align: center;
+}
+
+.right-text {
+    text-align: right;
+}
+
+.border-div {
+    border: solid 1px #000000;
+    margin-bottom: 2px;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 5px;
+    padding: 0px;
+}
+
+.razon_s {
+    font-size: 21px;
+    text-align: center;
+}
+
+
+.responsive-table {
+    width: 100%;
+}
+
+.table-article th {
+    background-color: #ccc;
+    padding: 2px;
+}
+
+.table-article{
+    font-size:11px;
+}
+
+.table-header {
+    font-size:11px;
+}
+
+.logo {
+    width: 100px;
+}
+
+.company_name {
+    margin-top: -25px;
+}
+
+.type_voucher {
+    font-size: 16px;
+}
+
+.orig_voucher {
+  padding-top: 5px;
+  padding-bottom: 5px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bolder;
+
+}
+
+.header_margin {
+  /*  margin-top: 30px;*/
+}
+.letrachica {
+  font-size: 8px;
+}
+.letter {
+    position: absolute;
+    text-align: center;
+    left: 46%;
+    top: 40px;/*68*/
+  /* top: 71px;*/
+    width: 60px;
+    border: solid 1px #000000;
+    margin-top: -1px;
+    background-color: #FFF;
+
+}
+
+.letter p.title {
+    padding-top: -29px;
+    padding-right: -29px;
+    padding-left: -29px;
+    padding-bottom: -40px;
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.negrita {
+      font-weight: bolder;
+}
+
+.letter span.type {
+    padding: -15px;
+    font-size: 10px;
+
+}

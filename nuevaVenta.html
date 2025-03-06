@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es" class="light-theme">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+  <!--plugins-->
+  <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+  <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+  <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+  <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" />
+  <link href="assets/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
+  <link href="assets/plugins/input-tags/css/tagsinput.css" rel="stylesheet" />
+  <link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
+  <link href="assets/css/style.css" rel="stylesheet" />
+  <link href="assets/css/icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="./assets/plugins/notifications/css/lobibox.min.css" />
+
+
+  <!-- loader-->
+	<link href="assets/css/pace.min.css" rel="stylesheet" />
+
+
+  <!--Theme Styles-->
+  <link href="assets/css/light-theme.css" rel="stylesheet" />
+  <link href="assets/css/header-colors.css" rel="stylesheet" />
+
+  <script src="./assets/js/jquery-3.6.0.js" ></script>
+
+  <title>Nueva Cotizacion - BSG Medical</title>
+  <script>
+    $.post("./api/ObtenerSesion")
+    .then((res)=>{
+      if(res=="NO"){
+        window.location.href = "//intranet.bsglaboratorios.com.ar/index.html";
+      }
+    })
+  </script>
+  <style>
+    .mostrarColumna{
+      width:100% !important;
+    }
+    .btn-opciones{
+        width:100% !important;
+        text-align: center !important;
+    }
+    .selector{
+      border:5px solid #BD1522;
+      background-color:rgb(52 97 255 / 5%);
+      padding:25px;
+      border-radius:25px;
+      text-align: center;
+    }
+    .selector:hover{
+      cursor:pointer;
+      background-color:rgb(52 97 255 / 20%);
+    }
+    .withoutStock{
+        background-color: rgb(248, 152, 152);
+    }
+  </style>
+</head>
+
+<body onload="showCart('facturadorB');">
+
+
+  <!--start wrapper-->
+  <div class="wrapper">
+    <div id="menu"></div>
+      <script>
+          $.get("menu.html", function(data){
+              $("#menu").html(data);
+          });
+      </script>
+
+       <!--start content-->
+       <main class="page-content">
+				<!--breadcrumb-->
+				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Ventas</div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item active" aria-current="page">Generar Presupuesto</li>
+							</ol>
+						</nav>
+					</div>
+				</div>
+				<!--end breadcrumb-->
+
+        <div id="contenedor">
+          <h2 class="text-center m-5 d-none">ELIJA EL TIPO DE COMPROBANTE A EMITIR</h2>
+          <div class="row m-5 d-none">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+              <div class="selector" onclick="showCart('facturadorA');">
+                <h1>A</h1>
+                <h4>Responsable Inscipto o Monotributista</h4>
+                <p>Este comprobante discrimina IVA y estará validado por AFIP de forma automática.</p>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+              <div class="selector" onclick="showCart('facturadorB');">
+                <h1>B</h1>
+                <h4>Consumidor Final</h4>
+                <p>Este comprobante <strong>NO</strong> discrimina IVA y será opcional la validación a través de AFIP.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        </main>
+       <!--end page main-->
+    </div>
+  <!--end wrapper-->
+
+  <div class="modal fade" id="modalElegirproducto" tabindex="-1" role="dialog" aria-labelledby="modalElegirproducto" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Elegir Producto</h5>
+          <button type="button" class="close" onclick="CerrarElegirProducto();" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="input-group p-2">
+                <table class="table centered" id="tabla-elegirproducto" >
+                    <thead>
+                      <tr>
+                          <th>Codigo</th>
+                          <th>Nombre</th>
+                          <th>Precio</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+  <!-- Bootstrap bundle JS -->
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <!--plugins-->
+  <script src="./assets/js/pace.min.js"></script>
+  <script src="./assets/plugins/select2/js/select2.min.js"></script>
+  <script src="./assets/plugins/input-tags/js/tagsinput.js"></script>
+  <script src="./assets/js/form-select2.js"></script>
+  <script src="./assets/plugins/notifications/js/notifications.js"></script>
+  <script src="./assets/plugins/notifications/js/lobibox.js"></script>
+  <script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+  <script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+  <script src="//momentjs.com/downloads/moment.min.js"></script> <!--Moments Library-->
+  <!--app-->
+  <script src="./js/nuevaVenta.js"></script>
+  <script src="assets/js/app.js"></script>
+
+
+<div class="modal fade" id="modalGuardando" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">Espere...</h5>
+        <button type="button" data-dismiss="modal" target="_blank" class="close" onclick="$('#modalGuardando').modal('hide')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" style="text-align:center;display: inline-block !important;">
+          <h5>Estamos cargando la venta...</h5></br></br>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="modalErrorFacturarAFIP" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">ERROR AL FACTURAR.</h5>
+        <button type="button" data-dismiss="modal" target="_blank" class="close" onclick="$('#modalErrorFacturarAFIP').modal('hide')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" style="text-align:center;display: inline-block !important;">
+          <h5>LA VENTA SE CARGÓ CON ÉXITO PERO HUBO UN ERROR AL OBTENER AUTORIZACIÓN DE AFIP. <br>
+            Intente facturarla nuevamente desde el menu Caja -> Transacciones. </h5></br>
+          <h5>En caso de persistir el error, entregue comprobante común al cliente.</h5></br></br>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
+
+</body>
+
+</html>
